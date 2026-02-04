@@ -5,9 +5,9 @@ namespace stock_finance_api.Mappers
 {
     public static class StockMappers
     {
-        public static StockDto ToStockDto(this Stock stockModel)
+        public static stockDto ToStockDto(this Stock stockModel)
         {
-            return new StockDto
+            return new stockDto
             {
 //reshapes the data
                 Id = stockModel.Id,
@@ -18,6 +18,18 @@ namespace stock_finance_api.Mappers
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
             };
+        }
+
+        public static Stock ToStockFromCreateDTO(this CreateStockRequestDto stockDto)
+        {
+            return new Stock
+            {
+                CompanyName = stockDto.CompanyName,
+                Purchase = stockDto.Purchase,
+                LastDiv = stockDto.LastDiv,
+                Industry = stockDto.Industry,
+                MarketCap = stockDto.MarketCap
+             };
         }
     }
 }
