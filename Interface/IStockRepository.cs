@@ -6,10 +6,10 @@ namespace stock_finance_api.Interface
     public interface IStockRepository
     {
         Task<List<Stock>> GetAllAsync();
-        Task<List<Stock>> GetByIdAsync();
+        Task<Stock?> GetByIdAsync(int id);
         Task<List<Stock>> CreateAsync(Stock stockModel);
-        Task<List<Stock>> UpdateAsync(int id, UpdateStockRequestDto stockDto);
-        Task<List<Stock>> DeleteAsync(int id);
+        Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto);
+        Task<Stock?> DeleteAsync(int id);
 
     }
 }
