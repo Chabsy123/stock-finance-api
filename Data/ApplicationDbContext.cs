@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Models;
 
@@ -19,6 +20,23 @@ namespace stock_finance_api.Data
         {
             // Ensure Identity entity mappings (and their keys) are configured
             base.OnModelCreating(modelBuilder);
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+             };
+
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        
 
             modelBuilder.Entity<Stock>()
                 .Property(s => s.LastDiv)
