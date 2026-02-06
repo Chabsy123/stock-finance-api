@@ -13,7 +13,8 @@ namespace stock_finance_api.Dtos.Stock
 
         public decimal Purchase { get; set; }
 
-        public decimal Dividend { get; set; }
+        public required string Symbol { get; set; } = string.Empty;
+
         public decimal LastDiv { get; set; }
 
         public string Industry { get; set; } = string.Empty;

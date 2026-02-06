@@ -11,9 +11,9 @@ namespace stock_finance_api.Mappers
             {
 //reshapes the data
                 Id = stockModel.Id,
-                //Symbol = stockModel.Symbol,
                 CompanyName = stockModel.CompanyName,
                 Purchase = stockModel.Purchase,
+                Symbol = stockModel.Symbol,
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
@@ -27,6 +27,7 @@ namespace stock_finance_api.Mappers
             {
                 CompanyName = stockDto.CompanyName,
                 Purchase = stockDto.Purchase,
+                Symbol = stockDto.Symbol,
                 LastDiv = stockDto.LastDiv,
                 Industry = stockDto.Industry,
                 MarketCap = stockDto.MarketCap

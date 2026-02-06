@@ -7,14 +7,13 @@ namespace stock_finance_api.Models
         public int Id { get; set; }
 
         public string CompanyName { get; set; } = string.Empty;
-        //eighteen digits, two decimal places
-        [Column(TypeName = "decimal(18,2)")]
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Purchase { get; set; }
 
-        public decimal Dividend { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
+        public required string Symbol { get; set; } = string.Empty;
 
+        [Column(TypeName = "decimal(18,2)")]
         public decimal LastDiv { get; set; }
 
         public string Industry { get; set; } = string.Empty;
@@ -22,6 +21,5 @@ namespace stock_finance_api.Models
         public long MarketCap { get; set; }
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
-
     }
 }

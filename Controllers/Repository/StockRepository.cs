@@ -1,25 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Data;
 using stock_finance_api.Dtos.Stock;
+using stock_finance_api.Helpers;
 using stock_finance_api.Interface;
 using stock_finance_api.Models;
 
-
-namespace api.Repository
+namespace stock_finance_api.Controllers.Repository
 {
     public class StockRepository : IStockRepository
     {
         private readonly ApplicationDbContext _context;
+
+        // Fail fast if DI didn't provide the DbContext
         public StockRepository(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<Stock> CreateAsync(Stock stockModel)
         {
             await _context.Stock.AddAsync(stockModel);
             await _context.SaveChangesAsync();
-            return stockModel;
+            return stockModel;  
         }
 
         public async Task<Stock?> DeleteAsync(int id)
@@ -36,9 +38,23 @@ namespace api.Repository
             return stockModel;
         }
 
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
-           return await _context.Stock.Include(c => c.Comments).ToListAsync();
+           var stocks = _context.Stock.Include(c => c.Comments).AsQueryable();
+
+           if (!string.IsNullOrEmpty(query.CompanyName))
+           {
+               stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Symbol))
+            {
+                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+
+            }
+
+            return await stocks.ToListAsync();
+
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
@@ -61,6 +77,7 @@ namespace api.Repository
 
             existingStock.CompanyName = stockDto.CompanyName;
             existingStock.Purchase = stockDto.Purchase;
+            existingStock.Symbol = stockDto.Symbol;
             existingStock.LastDiv = stockDto.LastDiv;
             existingStock.Industry = stockDto.Industry;
             existingStock.MarketCap = stockDto.MarketCap;
@@ -68,11 +85,6 @@ namespace api.Repository
             await _context.SaveChangesAsync();
 
             return existingStock;
-        }
-
-        Task<List<Stock>> IStockRepository.CreateAsync(Stock stockModel)
-        {
-            throw new NotImplementedException();
         }
     }
 }

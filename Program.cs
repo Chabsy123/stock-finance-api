@@ -1,4 +1,3 @@
-using api.Repository;
 using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Controllers.Repository;
 using stock_finance_api.Data;

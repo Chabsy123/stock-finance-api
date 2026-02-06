@@ -5,7 +5,8 @@ namespace stock_finance_api.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions) 
+        // Use the strongly-typed DbContextOptions<T> so DI provides the correct options instance
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : base(dbContextOptions) 
         {
             
         }
@@ -16,7 +17,7 @@ namespace stock_finance_api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Stock>()
-                .Property(s => s.Dividend)
+                .Property(s => s.LastDiv)
                 .HasPrecision(18, 2); // explicitly keep the default precision value and tell EF as well
         }
     }
