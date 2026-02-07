@@ -12,8 +12,8 @@ using stock_finance_api.Data;
 namespace stock_finance_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260206120633_AddIdentityTables")]
-    partial class AddIdentityTables
+    [Migration("20260207143031_PortfolioManyToMany")]
+    partial class PortfolioManyToMany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,20 @@ namespace stock_finance_api.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0d7912c5-9c7c-4f07-b2a1-fc627d353fdf",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "3546b699-01f3-4c52-9d8f-fa863c5b3b80",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -252,6 +266,21 @@ namespace stock_finance_api.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("stock_finance_api.Models.Portfolio", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "StockId");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("Portfolios");
+                });
+
             modelBuilder.Entity("stock_finance_api.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -347,9 +376,35 @@ namespace stock_finance_api.Migrations
                     b.Navigation("Stock");
                 });
 
+            modelBuilder.Entity("stock_finance_api.Models.Portfolio", b =>
+                {
+                    b.HasOne("stock_finance_api.Models.AppUser", "AppUser")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("stock_finance_api.Models.Stock", "Stock")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Stock");
+                });
+
+            modelBuilder.Entity("stock_finance_api.Models.AppUser", b =>
+                {
+                    b.Navigation("Portfolios");
+                });
+
             modelBuilder.Entity("stock_finance_api.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Portfolios");
                 });
 #pragma warning restore 612, 618
         }
